@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+service NNetwork {
+  
+    rpc GetAudio(stream Chunk) returns (ResultReply) {}
+}
+service Flask {
+
+    rpc GetResult (ResultReply) returns (UploadStatus) {}
+ 
+  }
+
+enum UploadStatusCode {
+    Unknown = 0;
+    Ok = 1;
+    Failed = 2;
+}
+
+message UploadStatus {
+    string Message = 1;
+    UploadStatusCode Code = 2;
+}
+
+// The response message containing the greetings
+message SpeechRequest {
+  string message = 1;
+}
+
+message Chunk {
+    bytes Content = 1;
+}
+  // The response message containing the greetings
+  message ResultReply {
+    string message = 1;
+  }
