@@ -1,41 +1,28 @@
-func (c *ClientGRPC) GetAudio(ctx context.Context, f string) (stats Stats, err error) {
+from __future__ import print_function
 
-        // Get a file handle for the file we 
-        // want to upload
-        file, err = os.Open(f)
+import random
+import logging
 
-        // Open a stream-based connection with the 
-        // gRPC server
-	stream, err := c.client.Upload(ctx)
-	
-        // Start timing the execution
-	stats.StartedAt = time.Now()
+import grpc
 
-        // Allocate a buffer with `chunkSize` as the capacity
-        // and length (making a 0 array of the size of `chunkSize`)
-	buf = make([]byte, c.chunkSize)
-	for writing {
-                // put as many bytes as `chunkSize` into the
-                // buf array.
-		n, err = file.Read(buf)
+import recognizer_pb2
+import recognizer_pb2_grpc
 
-                // ... if `eof` --> `writing=false`...
 
-		stream.Send(&messaging.Chunk{
-                        // because we might've read less than
-                        // `chunkSize` we want to only send up to
-                        // `n` (amount of bytes read).
-                        // note: slicing (`:n`) won't copy the 
-                        // underlying data, so this as fast as taking
-                        // a "pointer" to the underlying storage.
-			Content: buf[:n],
-		})
-	}
+def gener():
+    yield recognizer_pb2.Chunk(Content=bytes('test', encoding = 'utf-8'))
 
-        // keep track of the end time so that we can take the elapsed
-        // time later
-	stats.FinishedAt = time.Now()
+def run():
+    # NOTE(gRPC Python Team): .close() is possible on a channel and should be
+    # used in circumstances in which the with statement does not fit the needs
+    # of the code.
+    with grpc.insecure_channel('localhost:50051') as channel:
+        stub = recognizer_pb2_grpc.NNetworkStub(channel)
+        print('Hello :3')
+        result = stub.GetAudio(gener())
+        print(result.message)
 
-        // close
-	status, err = stream.CloseAndRecv()
-}
+
+if __name__ == '__main__':
+    logging.basicConfig()
+    run()

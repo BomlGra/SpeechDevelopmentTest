@@ -1,29 +1,39 @@
-#Upload implements the Upload method of the GuploadService
-#interface which is responsible for receiving a stream of
-#chunks that form a complete file.
-func (s *ServerGRPC) GetAudio(stream messaging.GuploadService_UploadServer) (err ResultReply) {
-        # while there are messages coming
-	for {
-		_, err = stream.Recv()
-		if err != nil {
-			if err == io.EOF {
-				goto END
-			}
+from concurrent import futures
+import grpc
+import recognizer_pb2
+import recognizer_pb2_grpc
 
-			err = errors.Wrapf(err,
-				"failed unexpectadely while reading chunks from stream")
-			return
-		}
-	}
+import time
+import math
+import logging
 
-END:
-        # once the transmission finished, send the
-        # confirmation if nothign went wrong
-	err = stream.SendAndClose(&messaging.UploadStatus{
-		Message: "Upload received with success",
-		Code:    messaging.UploadStatusCode_Ok,
-	})
-	#...
 
-	return
-}
+class RecognizerServicer(recognizer_pb2_grpc.NNetworkServicer):
+    """Provides methods that implement functionality of route guide server."""
+
+    def __init__(self):
+        pass
+
+    def GetAudio(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        for chunk in request_iterator:
+            print(chunk)
+        return recognizer_pb2.ResultReply(message=' Bye :3')
+        # context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        # context.set_details('Method not implemented!')
+        # raise NotImplementedError('Method not implemented!')
+
+
+def serve():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    recognizer_pb2_grpc.add_NNetworkServicer_to_server(
+        RecognizerServicer(), server)
+    server.add_insecure_port('[::]:50051')
+    server.start()
+    print('Server started')
+    server.wait_for_termination()
+
+
+if __name__ == '__main__':
+    logging.basicConfig()
+    serve()
