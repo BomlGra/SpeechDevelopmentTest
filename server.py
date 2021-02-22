@@ -7,6 +7,9 @@ import time
 import math
 import logging
 
+import speech_recognition as sr
+from io import BytesIO
+
 
 class RecognizerServicer(recognizer_pb2_grpc.NNetworkServicer):
     """Provides methods that implement functionality of route guide server."""
@@ -16,9 +19,17 @@ class RecognizerServicer(recognizer_pb2_grpc.NNetworkServicer):
 
     def GetAudio(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
+        bytes_audio = None
         for chunk in request_iterator:
-            print(chunk)
-        return recognizer_pb2.ResultReply(message=' Bye :3')
+            bytes_audio = chunk.Content
+        r = sr.Recognizer()
+        audio_data1 = sr.AudioFile(BytesIO(bytes_audio))
+        recognized_text = ''
+        with audio_data1 as source1:
+            audio1 = r.record(source1)
+            recognized_text = r.recognize_google(audio1, language='ru-RU')
+        print(recognized_text)
+        return recognizer_pb2.ResultReply(message=recognized_text)
         # context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         # context.set_details('Method not implemented!')
         # raise NotImplementedError('Method not implemented!')
