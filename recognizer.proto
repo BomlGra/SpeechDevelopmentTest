@@ -8,7 +8,7 @@ service NNetwork {
 message Chunk {
     bytes Content = 1;
 }
-  // The response message containing the greetings
+  
   message ResultReply {
     string message = 1;
   }

@@ -11,6 +11,7 @@ import speech_recognition as sr
 from io import BytesIO
 
 
+
 class RecognizerServicer(recognizer_pb2_grpc.NNetworkServicer):
     """Provides methods that implement functionality of route guide server."""
 
