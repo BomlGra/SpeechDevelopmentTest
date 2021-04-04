@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service NNetwork {
+  
+    rpc GetAudio(stream Chunk) returns (ResultReply) {}
+}
+
+message Chunk {
+    bytes Content = 1;
+}
+  // The response message containing the greetings
+  message ResultReply {
+    string message = 1;
+  }
