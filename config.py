@@ -1,0 +1,1 @@
+AUDIO_DIR = '/home/bomlgra/Desktop/Diploma/SpeechDevelopmentTest/audio/'
