@@ -1,146 +1,34 @@
 //webkitURL is deprecated but nevertheless
 URL = window.URL || window.webkitURL;
 
-var gumStream;                      //stream from getUserMedia()
-var rec;                            //Recorder.js object
-var input;                          //MediaStreamAudioSourceNode we'll be recording
+import AudioRecorder from "./Recorder/Recorder.js";
+import RecordSender from "./Sender.js";
+import RecordStorage from "./Storage.js";
 
-// shim for AudioContext when it's not avb. 
+// shim for AudioContext when it's not avb.
 var AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioContext //audio context to help us record
-var playing = false; // текущее состояние плеера
 var recordButton = document.getElementById("recordButton");
 var listenButton = document.getElementById("listen");
 var nextButton = document.getElementById("next");
-var records = [];
 
-recordButton.addEventListener("click", startStopRecording);
-nextButton.addEventListener('click', sendRecords);
+let audioRec = new AudioRecorder({ audio: true, video: false });
+let sender = new RecordSender("/");
+let storage = new RecordStorage();
 
+recordButton.addEventListener("click", () => {
+  audioRec.record((record) => {
+    storage.add(record);
+  });
+});
 
-function sendRecords() {
-    handleSubmit(records);
-}
-
-
-function startStopRecording() {
-
-    if(!playing) {
-
-    console.log("recordButton clicked");
-
-    var constraints = { audio: true, video:false };
-
-    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-        console.log("getUserMedia() success, stream created, initializing Recorder.js ...");
-
-        audioContext = new AudioContext();
-
-        //update the format 
-        // document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz";
-
-        /*  assign to gumStream for later use  */
-        gumStream = stream;
-
-        /* use the stream */
-        input = audioContext.createMediaStreamSource(stream);
-
-        rec = new Recorder(input,{numChannels:1});
-
-        //start the recording process
-        rec.record();
-
-        console.log("Recording started");
-
-    }).catch(function(err) {
-        //enable the record button if getUserMedia() fails
+nextButton.addEventListener("click", () => {
+  const records = storage.getRecords();
+  sender
+    .send(records)
+    .then(() => {
+      storage.clear();
+    })
+    .catch((err) => {
+      console.log(err);
     });
-}
-else 
-{
-    console.log("stopButton clicked");
-
-    //disable the stop button, enable the record too allow for new recordings
-    listenButton.disabled = false;
-    nextButton.disabled = false;
-    
-    console.log(rec);
-    //tell the recorder to stop the recording
-    rec.stop();
-
-    //stop microphone access
-    gumStream.getAudioTracks()[0].stop();
-
-    rec.exportWAV(recordCallback);
-}
-playing = !playing;
-}
-
-
-function recordCallback(blob) {
-    records.push(blob);
-    console.log('records: ', records);
-}
-
-// acceptedFiles are File objects coming from `react-dropzone`.
-function handleSubmit(records) {
-    const data = new FormData();
-    let i = 0;
-    for (const record of records) {
-      data.append('records[]', record, `record_${i}`);
-      ++i;
-    }
-  
-    return fetch('/', {
-      method: 'POST',
-      body: data,      
-    });
-  }
-
-
-// function createDownloadLink(blob) {
-//     var url = URL.createObjectURL(blob);
-//     var au = document.createElement('audio');
-//     var li = document.createElement('li');
-//     var link = document.createElement('a');
-
-//     //name of .wav file to use during upload and download (without extendion)
-//     var filename = new Date().toISOString();
-
-//     //add controls to the <audio> element
-//     au.controls = true;
-//     au.src = url;
-
-//     //save to disk link
-//     link.href = url;
-//     link.download = filename+".wav"; //download forces the browser to donwload the file using the  filename
-//     link.innerHTML = "Save to disk";
-
-//     //add the save to disk link to li
-//     li.appendChild(link);
-
-//     //upload link
-//     var upload = document.getElementById("next");
-//     upload.href="#";
-//     upload.innerHTML = "Upload";
-//     upload.addEventListener("click", function(event){
-//           var xhr=new XMLHttpRequest();
-//           xhr.onload=function(e) {
-//               if(this.readyState === 4) {
-//                   console.log("Server returned: ",e.target.responseText);
-//               }
-//           };
-//           var fd=new FormData();
-//           fd.append("audio_data",blob, filename);
-//           xhr.open("POST","/",true);
-//           xhr.send(fd);
-//     })
-//     li.appendChild(document.createTextNode (" ")); //add a space in between
-//     li.appendChild(upload); //add the upload link to li
-
-//     //add the li element to the ol
-//     recordingsList.appendChild(li);
-// }
-
-
-
+});
