@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+ 
+<head>
+    <title>Python Flask Bucket List App</title>
+    <!-- Обязательные метатеги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    
+</head>
+ 
+<body>
+ 
+    <div class="container">
+        <div class="header">
+            <h1>Hello!</h1>
+        </div>
+        <div class="d-grid gap-1 col-1 mx-auto">
+            <h1>Меню</h1>
+        </div>
+        <div class="row marketing">
+         
+            <div class="d-grid gap-4 col-6 mx-auto">
+                <a class="btn btn-success" href="account" role="button">Личный кабинет</a>
+               <!-- Button trigger modal -->
+                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Начать оценку состояния развития речи</a>
+                <a class="btn btn-success" href="moreAbout" role="button">Узнать больше о системе</a>
+              </div>
+         
+        </div>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите начать?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Нет</button>
+          <a class="btn btn-success" href="test" role="button">Начать</a>
+        </div>
+      </div>
+    </div>
+  </div>
+        <footer class="footer">
+            <p>&copy; Company 2015</p>
+        </footer>
+ 
+    </div>
+</body>
+ 
+</html>

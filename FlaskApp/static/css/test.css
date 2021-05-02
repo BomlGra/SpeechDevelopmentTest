@@ -1,0 +1,24 @@
+
+.mic { grid-area: mic; }
+
+.twobuttons { grid-area: twobuttons; }
+
+.question { grid-area: question; }
+
+.pause > svg { 
+  display: block;
+  margin-left: auto;
+}
+
+.reset > svg { 
+  display: block;
+  margin-left: auto;
+}
+
+  .round_but{
+     border-radius: 50%;
+     height: 100px;
+     width: 100px;
+     background: yellowgreen;
+  }
+

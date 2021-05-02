@@ -1,0 +1,21 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 15% 59% 13.8% 12.2%;
+    grid-template-rows: 10% 30% 50% 10%;
+    gap: 0px 0px;
+    grid-template-areas:
+      ". . . ."
+      ". name round-menu ."
+      ". list list ."
+      ". . . .";
+  }
+  
+  .round-menu { grid-area: round-menu; }
+  
+  .name { grid-area: name; }
+  
+  .list { grid-area: list; }
+  .circle {
+      background-color: yellowgreen;
+      border-radius: 50%;
+  }

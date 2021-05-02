@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+message Audio {
+    bytes content = 1;
+}
+
+message Audios {
+    repeated Audio audios = 1;
+}
+
+  // The response message containing the greetings
+message ResultReply {
+    int32 message = 1;
+}
+ 
+message RegData {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+    int32 age = 4;
+}
+
+message AuthData {
+    string email = 1;
+    string password = 2;
+}
+
+message Status {
+    string statusCode = 1;
+}
+
+service NNetwork {  
+    rpc GetScore(Audios) returns (ResultReply) {}
+}
+
+service Auth {
+    rpc Registration(RegData) returns (Status) {}  
+    rpc Authentication(AuthData) returns (Status) {}
+}
