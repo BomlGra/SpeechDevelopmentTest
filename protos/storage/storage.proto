@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package protos;
+
+// The greeting service definition.
+service Storage {
+    //   rpc GetReportsByUserId(GetReportsByUserIdRequest) returns (GetReportsByUserIdResponse);
+    rpc GetQuestions(google.protobuf.Empty) returns (GetQuestionsResponse);
+    rpc StartAttempt(StartAttemptRequest) returns (StartAttemptResponse);
+    rpc UploadAudio(UploadAudioRequest) returns (UploadAudioResponse);
+    rpc AttachReportToAttempt(AttachReportToAttemptRequest) returns (google.protobuf.Empty);
+    rpc GetReportByAttempt(GetReportByAttemptRequest) returns (GetReportByAttemptResponse);
+    rpc GetAudiousInArchive(GetAudiousInArchiveRequest) returns (GetAudiousInArchiveResponse);
+}
+
+message Report {
+    int32 phonetic_score = 1;
+    int32 grammar_score = 2;
+    int32 vocabular_score = 3;
+    int32 coherent_speech_score = 4;
+    google.protobuf.Timestamp created_at = 5;
+}
+
+
+message Question {
+    int32 question_id = 1;
+    string text = 2;
+    // text = CharField(max_length=1024)
+    // created_at = DateTimeField(default=datetime.datetime.now)
+}
+
+message Audio {
+    int32 attempt_id = 1;
+    int32 question_id = 2;
+    bytes content = 3;
+    string path = 4;
+}
+
+message GetQuestionsResponse {
+    repeated Question questions = 1;
+}
+
+message GetReportsByUserIdRequest {
+    int32 user_id = 1;
+}
+
+message GetReportsByUserIdResponse {
+    repeated Report reports = 1;
+}
+
+message UploadAudioRequest {
+    Audio audio = 1;
+}
+
+message UploadAudioResponse {
+    int32 audio_id = 1;
+}
+
+message StartAttemptRequest {
+    int32 user_id = 1;
+}
+
+message StartAttemptResponse {
+    int32 attempt_id = 1;
+}
+
+message AttachReportToAttemptRequest {
+    int32 attempt_id = 1;
+    Report report = 2;
+}
+
+message GetReportByAttemptRequest {
+    int32 attempt_id = 1;
+}
+
+message GetReportByAttemptResponse {
+    Report report = 1;
+}
+
+message GetAudiousInArchiveRequest{
+    int32 attempt_id = 1;
+}
+
+message GetAudiousInArchiveResponse{
+    bytes archive = 1;
+}

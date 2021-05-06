@@ -69,6 +69,46 @@ def signUp():
         return json.dumps({'html':'<span>Enter the required fields</span>'})
 
 
+from SpeechDevelopmentTest.protos.storage import storage_pb2_grpc
+from SpeechDevelopmentTest.protos.storage import storage_pb2
+from google.protobuf.empty_pb2 import Empty
 
 if __name__ == "__main__":
+    channel = grpc.insecure_channel('localhost:50051')
+    stub = storage_pb2_grpc.StorageStub(channel)
+    # response = stub.GetQuestions(Empty())
+    # for q in response.questions:
+    #     print(q)
+    # resp = stub.StartAttempt(storage_pb2.StartAttemptRequest(
+    #         user_id=1,
+    #     ),
+    # )
+    # print(resp.attempt_id)
+    # stub.AttachReportToAttempt(storage_pb2.AttachReportToAttemptRequest(
+    #     attempt_id=3,
+    #     report=storage_pb2.Report(
+    #         phonetic_score=3,
+    #         grammar_score=5,
+    #         vocabular_score=2,
+    #         coherent_speech_score=4,
+    #     )
+    # ))
+    # resp = stub.GetReportByAttempt(storage_pb2.GetReportByAttemptRequest(attempt_id=3))
+    # print(resp.report)
+    # print(resp.report.created_at.nanos)
+    # f = open('/Users/alpha/Projects/Students/shumak/SpeechDevelopmentTest/Untitled.wav', 'rb')
+    # byt = f.read()
+    # stub.UploadAudio(storage_pb2.UploadAudioRequest(
+    #     audio=storage_pb2.Audio(
+    #         attempt_id=3,
+    #         question_id=1,
+    #         content=byt,
+    #     )
+    # ))
+    resp = stub.GetAudiousInArchive(storage_pb2.GetAudiousInArchiveRequest(
+        attempt_id=3,
+    ))
+    channel.close()
+    with open('attempt_3.zip', 'wb') as f:
+        f.write(resp.archive)
     app.run(debug=True)

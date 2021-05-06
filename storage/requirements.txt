@@ -1,0 +1,9 @@
+click==7.1.2
+grpcio==1.37.1
+grpcio-tools==1.37.1
+peewee==3.14.4
+peewee-migrations==0.3.19
+protobuf==3.15.8
+psycopg2-binary==2.8.6
+six==1.15.0
+zipfile38==0.0.3
